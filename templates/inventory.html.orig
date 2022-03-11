@@ -1,0 +1,261 @@
+{% extends 'home_base_loggedin.html' %}
+
+
+{% block content %}
+
+
+<!-- add files here for live search (can be used for color input, and other input) start here 11-26 -->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css">
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/bootstrap-select.min.js"></script>
+<!-- (Optional) Latest compiled and minified JavaScript translation files -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/i18n/defaults-*.min.js"></script>
+<!-- add files here for live search end here 11-26  -->
+
+
+
+
+<!-- Search area start from here-->
+<div class="container">
+  <div class="content">
+    
+
+      <h3>You can search by only entering VIN or filling the information after VIN:</h3>
+      <p></p>
+      <h5>There are {{ num_unsold_vehicles['num_unsold']}} vehicles in stock</h5>
+
+
+      {%with messages = get_flashed_messages()%}
+      {%if messages%}
+      {% for message in messages %}
+        <div class="alert alert-success alert-dismissable" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label ="close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          {{message}}
+        </div>
+      {%endfor%}
+      {%endif%}
+      {%endwith%}
+
+
+
+
+      <!-- {% if inventoryclerk %}
+      {% endif %} -->
+      <!-- modify from here 11-30 -->
+      
+      <form action="{{ url_for('add_vehicle')}}" id="insert_vehicle_form">
+        {% if user in inventoryclerk_list %}
+        <input type="submit" value="Add New Vehicle" name="action1" class="btn btn-success"style="float: right" />
+
+        {% endif %}
+       </form>
+
+     
+      <!-- modify end here 11-30-->
+
+      <br></br>
+  <form action= "{{ url_for('advanced_search_inventory') }}" method="post">
+      <fieldset>
+        <table id="sample_data" class="table table-bordered table-striped">
+          <colgroup><col align="right"></col><col align="left"></col></colgroup>
+
+
+          <tr><th>VIN:</th>
+            <!-- modified vin regular expression 11-27 -->
+            <!-- <td><input type="text" name="vin" title="vin" placeholder="17-digit VIN" pattern="[A-HJ-NPR-Z0-9]{17}"><td></tr> -->
+            <td><select  class="selectpicker" name='vin' data-live-search="true" id="select_vin" data-size="10" style="overflow: hidden; width:500px;">
+              <option selected>Enter VIN</option>
+              {% for item in unsold_vehicle_list %}
+              <!-- hide the vins in the option positon style="display:none" -->
+              <option style="display:none" data-tokens="{{ item.vin }}">{{ item.vin }}</option>
+              {% endfor %}
+            </select></td></tr>
+
+          <tr><th>Vehicle Type:</th>
+            <td>
+              <select class="form-select" name="vehicle_type">
+                <option selected value="">Select Vehicle Type</option>
+                {% for item in vehicle_type %}
+                <option value="{{ item.vehicle_type }}">{{ item.vehicle_type }}</option>
+                {% endfor %}
+              </select>
+            </td></tr>
+
+          <tr><th>Manufacturer:</th>
+            <td>
+              <select class="form-select" name="manufacturer_name">
+                <option selected value="">Select Maunufacturer</option>
+                {% for item in manufacturer_name %}
+                <option value="{{ item.manufacturer_name }}">{{ item.manufacturer_name }}</option>
+                {% endfor %}
+              </select>
+            </td></tr>
+
+          <tr><th>Model Name:</th>
+            <td>
+              <select class="form-select" name = "model_name">
+                <option selected value="">Select Model Name</option>
+                {% for item in model_name %}
+                <option value="{{ item.model_name }}">{{ item.model_name }}</option>
+                {% endfor %}
+              </select>
+            </td></tr>
+              <!-- modified year input valid number 11-26 -->
+					<tr><th>Model Year (YYYY):</th>
+<<<<<<< HEAD
+						<td><input type="number" name="model_year" max="2022" min="1900" title="modelyear" placeholder="YYYY" autocomplete="off"></td></tr>
+=======
+						<td><input type="number" name="model_year" max="2022" min="1900" title="modelyear" placeholder="YYYY" autocomplete="off"><td></tr>
+>>>>>>> origin/master
+              <!-- modified year input valid number 11-26-->
+          
+<!--           <tr><th>Model Year (YYYY):</th>
+              <td><input type="number" name="model_year" max="2022" min="1900" title="modelyear" placeholder="Example: 2018" autocomplete="off"><td></tr> -->
+
+
+
+<!--           <tr><th>Model Year (YYYY):</th>
+              <td><input type="number" name="model_year" max="2022" min="1900" title="modelyear" placeholder="Example: 2018" autocomplete="off"><td></tr> -->
+
+
+
+          <tr>
+            <th>Color:</th>
+            <td>
+              <!-- modified here 11-26 -->
+              <select class="selectpicker" data-live-search="true" name='color'>
+                <option selected value="">Select Vehicle Color</option>
+                {% for item in color %}
+                <option data-tokens="{{ item.color }}" >{{ item.color }}</option>
+                {% endfor %}
+              </select>
+              <!-- modified here 11-26 -->
+            </td>
+          </tr>
+
+          <!-- modified here 11-26 -->
+          <tr>
+            <th>List Price ($):</th>
+            <td>
+              <div class="input-group-prepend">
+                <span class="input-group-text">$</span>
+                <input type="text" class="form-control" name="list_price" title="listprice">
+              </div>
+            <td>
+          </tr>
+          <!-- modified here 11-26 -->
+
+
+            <tr><th>Keyword:</th>
+							<td><textarea name="Keyword" placeholder="You can enter descriptions for the vehicle." rows="4" cols="50" title="comments"></textarea></td></tr>
+
+
+          <tr>
+            <td></td>
+            <td><button type="submit" class="btn btn-primary"value="Submit">Submit</button></td>
+          </tr>
+
+        </table>
+      </fieldset>
+    </form>
+
+    <!--Modal add new vehicle 11-27 -->
+     <div id="myModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <button type="button" class="close" data-dismiss="modal"></button>
+            <h4 class="modal-title w-100">Please Fill in the vehicle information</h4>
+          </div>
+          <div class="modal-body">
+            <!-- modify need 11-27 -->
+            <form action="{{ url_for('add_vehicle') }}" method="POST">
+
+              <div class="form-group">
+                <label>Vehicle VIN:</label>
+                <input type="text" class="form-control" name="vin"  autocomplete="off" required="1">
+              </div>
+
+              <div class="form-group">
+                <label>Vehicle Type:</label>
+                <!-- <input type="text" class="form-control" name="type"  autocomplete="off" required="1" > -->
+                <select class="form-select" name="vehicle_type">
+                  <option selected value="">Select Vehicle Type</option>
+                  {% for item in vehicle_type %}
+                  <option value="{{ item.vehicle_type }}">{{ item.vehicle_type }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Manufacturer:</label>
+                <input type="text" class="form-control" name="manufacturer_name"  autocomplete="off" >
+              </div>
+
+              <div class="form-group">
+                <label>Color:</label>
+
+                <!-- modified here 11-26 -->
+                <select name='color' class="form-select" >
+                  <option selected>Select Vehicle Color</option>
+                  {% for item in color %}
+                  <option data-tokens="{{ item.color }}">{{ item.color }}</option>
+                  {% endfor %}
+                </select>
+                <!-- modified here 11-26 -->
+
+
+
+              </div>
+
+              <div class="form-group">
+                <label>Model Name:</label>
+                <input type="text" class="form-control" name="model_name" autocomplete="off" >
+              </div>
+
+
+              <div class="form-group">
+                <label>Model Year:</label>
+                <input type="text" class="form-control" name="model_year"  autocomplete="off" >
+              </div>
+
+
+              <div class="form-group">
+                <label>Invoice Price:</label>
+                <input type="text" class="form-control" name="invoice_price"  autocomplete="off" >
+              </div>
+
+
+
+              <!-- modify here 11-26 -->
+              <div class="form-group">
+                <label>Addition Date:</label>
+                <input type="date" id="today2" class="form-control" name="addition_date" value="2012-12-12" readonly>
+              </div>
+              <!-- modify here 11-26 -->
+
+              <div class="form-group">
+                <label>Description:</label>
+                <input type="text" class="form-control" name="description" autocomplete="off" >
+              </div>
+
+              <div class="form-group">
+                <button class="btn btn-primary" type="submit">Insert Data</button>
+              </div>
+            </form>
+          </div>
+
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Search area end here-->
+{% endblock %}

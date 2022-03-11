@@ -1,0 +1,83 @@
+{% extends 'home_base_loggedin.html' %}
+
+{% block content %}
+
+<div class="container">
+
+
+    <div class="row">
+  		<div class="col md-12">
+
+        <h1><a href="#" class="badge badge-warning center" >Sales in previous month</a></h1>
+
+  			<table id="vehicle" class="table table-striped" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+              <thead>
+                <tr>
+                  <th>Vehicle Color</th>
+                  <th>Number of Vehicles Sold</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for row in color_sales_30 %}
+                <tr>
+                  <td data-name="Vehicle Color">{{row.Color}}</td>
+                  <td data-name="Number of Vehicles Sold">{{row.Vehicle_Sales_Count_30Days}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+
+        </table>
+
+
+
+        <h1><a href="#" class="badge badge-success center" >Sales in previous year</a></h1>
+
+  			<table id="vehicle" class="table table-striped" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+          <thead>
+            <tr>
+              <th>Vehicle Color</th>
+              <th>Number of Vehicles Sold</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            {% for row in color_sales_year %}
+            <tr>
+              <td data-name="Vehicle Color">{{row.Color}}</td>
+              <td data-name="Number of Vehicles Sold">{{row.Vehicle_Sales_Count_1year}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+
+        </table>
+
+
+
+        <h1><a href="#" class="badge badge-primary center" >Sales over all time</a></h1>
+
+  			<table id="vehicle" class="table table-striped" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+          <thead>
+            <tr>
+              <th>Vehicle Color</th>
+              <th>Number of Vehicles Sold</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            {% for row in color_sales_all %}
+            <tr>
+              <td data-name="Vehicle Color">{{row.Color}}</td>
+              <td data-name="Number of Vehicles Sold">{{row.Vehicle_Sales_Count}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+
+
+
+
+  </div>
+
+{% endblock%}

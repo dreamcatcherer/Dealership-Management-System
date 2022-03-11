@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{% block title %}{% endblock %}</title>
+		<link rel="stylesheet" href="/static/css/login_style.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+	</head>
+	<body class="loggedin">
+		<nav class="navtop">
+			<div>
+				<h1><img src="/static/images/logo2.png" alt="logo2.png"/> </h1>
+		</nav>
+		<div class="content">
+			{% block body %}
+              <h1>Page Not Found</h1>
+              <p>What you were looking for is just not there.
+      {% endblock %}
+		</div>
+	</body>
+</html>

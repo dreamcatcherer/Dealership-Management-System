@@ -1,0 +1,75 @@
+{% extends 'home_base_loggedin.html' %}
+
+{% block content %}
+
+<div class="container">
+
+
+    <div class="row">
+  		<div class="col md-12">
+
+        <h1><a href="#" class="badge badge-warning center" >Monthly/Yearly Sales Summary</a></h1>
+
+  			<table id="vehicle" class="table" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Month</th>
+                  <th>Number of Sold Vehicles</th>
+                  <th>Total Sales Income $</th>
+                  <th>Total Net Income $</th>
+                  <th>Ratio of Sold Price/Invoice Price(%)</th>
+                  <th>Top Salesperson Details</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for row in month_year_sales_summary %}
+                  {% if row.ratio>=125 %}
+                  <tr class='clickable-row'>
+                    <td class="table-success" data-name="Year">{{row.year}}</td>
+                    <td class="table-success" data-name="Month">{{row.month}}</td>
+                    <td class="table-success" data-name="Number of Sold Vehicles">{{row.vehicle_sold}}</td>
+                    <td class="table-success" data-name="Total Sales Income $">{{row.total_income}}</td>
+                    <td class="table-success" data-name="Total Net Income $">{{row.net_income}}</td>
+                    <td class="table-success" data-name="Ratio of Sold Price/Invoice Price(%)">{{row.ratio}}</td>
+                    <td>
+                      <a href="{{url_for('top_salesperson_report', rowyear=row.year, rowmonth=row.month)}}" class="btn btn-success btn-xs" data-name="Top Salesperson Details">View Top Salesperson Details</a>
+                    </td>
+                  </tr>
+                  {% elif row.ratio>110 %}
+                  <tr class='clickable-row'>
+                    <td data-name=">Year">{{row.year}}</td>
+                    <td data-name="Month">{{row.month}}</td>
+                    <td data-name="Number of Sold Vehicles">{{row.vehicle_sold}}</td>
+                    <td data-name="Total Sales Income $">{{row.total_income}}</td>
+                    <td data-name="Total Net Income $">{{row.net_income}}</td>
+                    <td data-name="Ratio of Sold Price/Invoice Price(%)">{{row.ratio}}</td>
+                    <td>
+                      <a href="{{ url_for('top_salesperson_report', rowyear=row.year, rowmonth=row.month)}}" class="btn btn-success btn-xs" data-name="Top Salesperson Details">View Top Salesperson Details</a>
+                    </td>
+                  </tr>
+                  {% else %}
+                  <tr class='clickable-row'>
+                    <td class="table-warning" data-name=">Year">{{row.year}}</td>
+                    <td class="table-warning" data-name="Month">{{row.month}}</td>
+                    <td class="table-warning" data-name="Number of Sold Vehicles">{{row.vehicle_sold}}</td>
+                    <td class="table-warning" data-name="Total Sales Income $">{{row.total_income}}</td>
+                    <td class="table-warning" data-name="Total Net Income $">{{row.net_income}}</td>
+                    <td class="table-warning" data-name="Ratio of Sold Price/Invoice Price(%)">{{row.ratio}}</td>
+                    <td>
+                      <a href="{{url_for('top_salesperson_report', rowyear=row.year, rowmonth=row.month)}}" class="btn btn-success btn-xs" data-name="Top Salesperson Details">View Top Salesperson Details</a>
+                    </td>
+                  </tr>
+                  {% endif %}
+
+                {% endfor %}
+              </tbody>
+
+        </table>
+
+
+
+  </div>
+
+{% endblock%}

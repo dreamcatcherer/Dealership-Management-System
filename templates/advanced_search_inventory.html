@@ -1,0 +1,1469 @@
+{% extends 'home_base_loggedin.html' %}
+
+{% block content %}
+
+
+
+
+		<!-- new added -->
+		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+		<script>
+      $(document).ready(function() {
+          // DataTable
+          var table = $('#vehicle').DataTable({
+						   "searching": false,  //remove search bar
+						  // language: { search: ""},  //remove search
+              initComplete: function () {
+                  // Apply the search
+                  this.api().columns().every( function () {
+                      var that = this;
+
+                      $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                          if ( that.search() !== this.value ) {
+                              that
+                                  .search( this.value )
+                                  .draw();
+                          }
+                      } );
+                  } );
+              }
+          });
+
+      } );
+      </script>
+
+
+
+<!-- <div class="container-fluid"> -->
+<div class="container">
+  <div class="row">
+		<div class="col md-12">
+      <h2>The search result:</h2>
+
+
+			{% if not data %}
+			<!-- <h5>Sorry, it looks like we don't have that in stock!</h5> -->
+			<h1><a href="#" class="badge badge-warning">Sorry, it looks like we don't have that in stock!</a></h1>
+			{% endif %}
+
+			{%with messages = get_flashed_messages()%}
+      {%if messages%}
+      {% for message in messages %}
+	      <div class="alert alert-success alert-dismissable" role="alert">
+	        <button type="button" class="close" data-dismiss="alert" aria-label ="close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	        {{message}}
+	      </div>
+      {%endfor%}
+      {%endif%}
+      {%endwith%}
+
+
+       <!-- modify from here 11-30 -->
+      <!-- {% if user in inventoryclerk_list %}
+      <form action="{{ url_for('add_vehicle')}}" id="insert_vehicle_form">
+        <input type="submit" value="Add New Vehicle" name="action1" class="btn btn-success"style="float: right" />
+       </form>
+      {% endif %} -->
+
+                 <h3>Unsold Vehicle:</h3>
+
+      <!-- modify end here 11-30-->
+			<table id="vehicle" class="table table-striped" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+            <thead>
+              <tr>
+                <th>VIN</th>
+                <th>Vehicle Type</th>
+                <th>Manufacturer</th>
+                <th>Color</th>
+                <th>Model Name</th>
+                <th>Model Year</th>
+                <th>Invoice Price</th>
+                <th>List Price</th>
+                <th>Additon Date</th>
+                <th>Description</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in data %}
+              <tr>
+                <td><a href="{{ url_for('vehicle_detail_repair_part', rowData=row.vin)}}" data-name="VIN">{{row.vin}}</a></td>
+                <td  data-name="Vehicle Type">{{row.v_type}}</td>
+                <td data-name="Manufacturer">{{row.manufacturer_name}}</td>
+                <td  data-name="Color">{{row.color}}</td>
+                <td data-name="Model Name">{{row.model_name}}</td>
+                <td data-name="Model Year">{{row.model_year}}</td>
+                <td data-name="Invoice Price">{{row.invoice_price}}</td>
+                <td data-name="List Price">{{row.list_price}}</td>
+                <td data-name="Additon Date">{{row.addition_date}}</td>
+                <td data-name="Description">{{row.description}}</td>
+                <td >
+
+									<a href="/loggedin_home/inventory/advanced_search_inventory/view/{{row.vin}}" class="btn btn-success btn-xs" data-toggle="modal" data-target="#modalview{{row.vin}}">View</a>
+									&nbsp;
+
+									{% if user in owner_list %}
+									<!-- <a href="/loggedin_home/inventory/advanced_search_inventory/update/{{row.vin}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.vin}}">Edit</a> -->
+									&nbsp;
+									<!-- <a href="/loggedin_home/inventory/advanced_search_inventory/delete/{{row.vin}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Deleeete</a> -->
+									{% endif %}
+
+
+                  {% if user in (salespeople_list +owner_list) %}
+									<a href="/loggedin_home/inventory/advanced_search_inventory/view/{{row.vin}}"  class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modalsell{{row.vin}}">Sell</a>
+                  {% endif %}
+									&nbsp;
+
+
+                  <!-- {{url_for('add_vehicle')}} -->
+                </td>
+              </tr>
+
+
+<!--               <div id="modalview{{ row.vin }}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+
+                    <div class="modal-header text-center">
+                      <button type="button" class="close" data-dismiss="modal"></button>
+                      <h4 class="modal-title w-100">View vehicle information</h4>
+                    </div>
+
+                    <div class="modal-body">
+                      <form action="#" method="post">
+
+                        <div class="form-group">
+                          <label>Vehicle VIN:</label>
+                          <input type="text"  name="vin" value="{{row.vin}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Vehicle Type:</label>
+                          <input type="text" class="form-control" name="type" value="{{row.v_type}}" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Manufacturer:</label>
+                          <input type="text" class="form-control" name="manufacturer_name" value="{{row.manufacturer_name}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Color:</label>
+                          <input type="text" class="form-control" name="color" value="{{row.color}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Model Name:</label>
+                          <input type="text" class="form-control" name="model_name" value="{{row.model_name}}" autocomplete="off" readonly>
+                        </div>
+                        <div class="form-group">
+                          <label>Model Year:</label>
+                          <input type="text" class="form-control" name="model_year" value="{{row.model_year}}" readonly>
+                        </div>
+
+
+
+                        <div class="form-group">
+                          <label>List Price:</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                              </div>
+                              <input type="text" class="form-control" value="{{row.list_price}}" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Inventory Status:</label>
+                          <input type="text" class="form-control" name="inventory_status" value="{{row.inventory_status}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Addition Date:</label>
+                          <input type="text" class="form-control" name="addition_date" value="{{row.addition_date}}" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Description:</label>
+                          <input type="text" class="form-control" name="description" value="{{row.description}}" readonly>
+                        </div>
+                      </form>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div> -->
+
+							<!-- modal edit the current record -->
+							<div id="modaledit{{ row.vin }}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+										<div class="modal-header text-center">
+					            <button type="button" class="close" data-dismiss="modal"></button>
+					            <h4 class="modal-title w-100">Update the vehicle information</h4>
+					          </div>
+
+                    <div class="modal-body">
+                      <form action="{{url_for('update')}}" method="post">
+												<div class="form-group">
+                          <label>Vehicle VIN:</label>
+                          <input type="text"  name="vin" value="{{row.vin}}" readonly>
+                        </div>
+
+												<div class="form-group">
+                          <label>Vehicle Type:</label>
+                          <input type="text" class="form-control" name="type" value="{{row.v_type}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Manufacturer:</label>
+                          <input type="text" class="form-control" name="manufacturer_name" value="{{row.manufacturer_name}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Color:</label>
+                          <input type="text" class="form-control" name="color" value="{{row.color}}" autocomplete="off" >
+                        </div>
+
+												<div class="form-group">
+                          <label>Model Name:</label>
+                          <input type="number" class="form-control" name="model_name" value="{{row.model_name}}" autocomplete="off" >
+													<!-- <label for="model_name">Model Name:</label>
+														  <select class="form-control" id="model_name">
+														    <option>1</option>
+														    <option>2</option>
+														    <option>3</option>
+														    <option>4</option>
+														  </select> -->
+												</div>
+
+
+												<div class="form-group">
+                          <label>Model Year:</label>
+                          <input type="text" class="form-control" name="model_year" value="{{row.model_year}}" autocomplete="off" >
+                        </div>
+
+
+												<div class="form-group">
+                          <label>Invoice Price:</label>
+                          <input type="text" class="form-control" name="invoice_price" value="{{row.invoice_price}}" autocomplete="off" >
+                        </div>
+
+												<div class="form-group">
+                          <label>List Price:</label>
+														<div class="input-group mb-3">
+															<div class="input-group-prepend">
+																<span class="input-group-text">$</span>
+															</div>
+															<input type="text" class="form-control" value="{{row.list_price}}">
+														</div>
+												</div>
+
+												<!-- <div class="form-group">
+                          <label>Inventory Status:</label>
+                          <input type="text" class="form-control" name="inventory_status" value="{{row.inventory_status}}" autocomplete="off" >
+                        </div> -->
+
+												<div class="form-group">
+                          <label>Addition Date:</label>
+                          <input type="text" class="form-control" name="addition_date" value="{{row.addition_date}}" autocomplete="off" readonly >
+                        </div>
+
+												<div class="form-group">
+                          <label>Description:</label>
+                          <input type="text" class="form-control" name="description" value="{{row.description}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <button class="btn btn-primary" type="sbumit">Update</button>
+                        </div>
+                      </form>
+
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+							</div>
+
+
+              <!-- modified version start from here nov1124 (solved the problem that view button did not show the details)-->
+							<!-- modal view the current record -->
+							<div id="modalview{{ row.vin }}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+
+										<div class="modal-header text-center">
+					            <button type="button" class="close" data-dismiss="modal"></button>
+					            <h4 class="modal-title w-100">View vehicle information</h4>
+					          </div>
+
+                    <div class="modal-body">
+                      <form action="#" method="post">
+
+												<div class="form-group">
+                          <label>Vehicle VIN:</label>
+													<input type="text"  name="vin" value="{{row.vin}}" readonly>
+                        </div>
+
+												<div class="form-group">
+                          <label>Vehicle Type:</label>
+                          <input type="text" class="form-control" name="type" value="{{row.v_type}}" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Manufacturer:</label>
+                          <input type="text" class="form-control" name="manufacturer_name" value="{{row.manufacturer_name}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Color:</label>
+                          <input type="text" class="form-control" name="color" value="{{row.color}}" readonly>
+                        </div>
+
+												<div class="form-group">
+                          <label>Model Name:</label>
+                          <input type="text" class="form-control" name="model_name" value="{{row.model_name}}" autocomplete="off" readonly>
+                        </div>
+												<div class="form-group">
+                          <label>Model Year:</label>
+                          <input type="text" class="form-control" name="model_year" value="{{row.model_year}}" readonly>
+                        </div>
+
+												<!-- <div class="form-group">
+                          <label>Year Entered:</label>
+                          <input type="text" class="form-control" name="year_entered" value="{{row.year_entered}}" readonly>
+                        </div> -->
+
+												<div class="form-group">
+                          <label>Invoice Price:</label>
+                          <input type="text" class="form-control" name="invoice_price" value="{{row.invoice_price}}" readonly >
+                        </div>
+
+												<div class="form-group">
+													<label>List Price:</label>
+														<div class="input-group mb-3">
+															<div class="input-group-prepend">
+																<span class="input-group-text">$</span>
+															</div>
+															<input type="text" class="form-control" value="{{row.list_price}}" readonly>
+														</div>
+												</div>
+
+												<!-- <div class="form-group">
+                          <label>Inventory Status:</label>
+                          <input type="text" class="form-control" name="inventory_status" value="{{row.inventory_status}}" readonly>
+                        </div> -->
+
+												<div class="form-group">
+                          <label>Addition Date:</label>
+                          <input type="text" class="form-control" name="addition_date" value="{{row.addition_date}}" readonly >
+                        </div>
+
+												<div class="form-group">
+                          <label>Description:</label>
+                          <input type="text" class="form-control" name="description" value="{{row.description}}" readonly>
+                        </div>
+                      </form>
+										</div>
+
+										<div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                </div>
+							</div>
+
+
+
+
+							<!-- modal sell the current record -->
+              <div id="modalsell{{ row.vin }}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header text-center">
+                      <button type="button" class="close" data-dismiss="modal"></button>
+                      <h4 class="modal-title w-100">Vehicle Transaction information</h4>
+                    </div>
+
+                    <div class="modal-body">
+                      <form action="{{url_for('customer')}}" method="post">
+                        <div class="form-group">
+                          <label>Vehicle VIN:</label>
+                          <input type="text"  name="vin" value="{{row.vin}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Vehicle Type:</label>
+                          <input type="text" class="form-control" name="v_type" value="{{row.v_type}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Manufacturer:</label>
+                          <input type="text" class="form-control" name="manufacturer_name" value="{{row.manufacturer_name}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Color:</label>
+                          <input type="text" class="form-control" name="color" value="{{row.color}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Model Name:</label>
+                          <input type="text" class="form-control" name="model_name" value="{{row.model_name}}" autocomplete="off" >
+                          <!-- <label for="model_name">Model Name:</label>
+                              <select class="form-control" id="model_name">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                              </select> -->
+                        </div>
+
+
+                        <div class="form-group">
+                          <label>Model Year:</label>
+                          <input type="text" class="form-control" name="model_year" value="{{row.model_year}}" autocomplete="off" >
+                        </div>
+
+
+                        <div class="form-group">
+                          <label>Invoice Price:</label>
+                          <input type="number" step="0.01" class="form-control" name="invoice_price" value="{{row.invoice_price}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>List Price:</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                              </div>
+                              <input type="number"  step="0.01" class="form-control" name="list_price" value="{{row.list_price}}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Sold Price:</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                              </div>
+															{% if user in owner_list %}
+															<input type="number" step="0.01" class="form-control" name="sold_price" required="required">
+															{% else %}
+                              <input type="number" step="0.01" class="form-control" name="sold_price" required="required" min="{{min_sold_price[row.vin]}}">
+                              {% endif %}
+														</div>
+                        </div>
+
+                        <!-- <div class="form-group">
+                          <label>Inventory Status:</label>
+                          <input type="text" class="form-control" name="inventory_status" value="{{row.inventory_status}}" autocomplete="off" >
+                        </div> -->
+
+                        <div class="form-group">
+                          <label>Sold Date:</label>
+                          <input type="text" class="form-control" name="sold_date" value="{{curr_date}}" autocomplete="off" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Description:</label>
+                          <input type="text" class="form-control" name="description" value="{{row.description}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Sold By:</label>
+													<input type="text" class="form-control" name="soldby" value="{{user}}" autocomplete="off" >
+                          <!-- <select  class="selectpicker" name='soldby' data-live-search="true" data-size="10" style="overflow: hidden;" required="required">
+                          <option selected value="">Enter UserID</option>
+                          {% for item in (salespeople_list + owner_list)  %}
+                          <option  data-tokens="{{ item }}">{{ item }}</option>
+                          {% endfor %}
+                          </select> -->
+                        </div>
+
+
+<!--             <th>
+              Sold By:
+            </th>
+
+            <td><select  class="selectpicker" name='soldby' data-live-search="true" data-size="10" style="overflow: hidden; width:500px;">
+              <option selected value="">Enter UserID</option>
+              {% for item in (inventoryclerk_list + owner_list)  %}
+
+               <option  data-tokens="{{ item }}">{{ item }}</option>
+              {% endfor %}
+            </select></td>
+          </tr> -->
+
+                        <div class="form-group">
+                          <button class="btn btn-primary" type="sbumit" name="btn" value=
+                          "sell">Sell Vehicle</button>
+                        </div>
+                      </form>
+
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              </div>
+
+
+
+              {% endfor %}
+            </tbody>
+      </table>
+
+
+
+
+
+
+
+<!--     sold
+
+ -->
+{% if user in manager_list %}
+           <h3>Sold Vehicle:</h3>
+          <!-- modify end here 11-30-->
+      <table id="vehicle" class="table table-striped" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+            <thead>
+              <tr>
+                <th>VIN</th>
+                <th>Vehicle Type</th>
+                <th>Manufacturer</th>
+                <th>Color</th>
+                <th>Model Name</th>
+                <th>Model Year</th>
+                <th>Invoice Price</th>
+                <th>List Price</th>
+                <th>Additon Date</th>
+                <th>Description</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in data_sold %}
+              <tr>
+                <td><a href="{{ url_for('vehicle_detail_repair_part', rowData=row.vin)}}" data-name="VIN">{{row.vin}}</a></td>
+                <td  data-name="Vehicle Type">{{row.v_type}}</td>
+                <td data-name="Manufacturer">{{row.manufacturer_name}}</td>
+                <td  data-name="Color">{{row.color}}</td>
+                <td data-name="Model Name">{{row.model_name}}</td>
+                <td data-name="Model Year">{{row.model_year}}</td>
+                <td data-name="Invoice Price">{{row.invoice_price}}</td>
+                <td data-name="List Price">{{row.list_price}}</td>
+                <td data-name="Additon Date">{{row.addition_date}}</td>
+                <td data-name="Description">{{row.description}}</td>
+                <td >
+
+                  <a href="/loggedin_home/inventory/advanced_search_inventory/view/{{row.vin}}" class="btn btn-success btn-xs" data-toggle="modal" data-target="#modalview{{row.vin}}">View</a>
+                  &nbsp;
+
+                  {% if user in owner_list %}
+                  <!-- <a href="/loggedin_home/inventory/advanced_search_inventory/update/{{row.vin}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.vin}}">Edit</a> -->
+                  &nbsp;
+                  <!-- <a href="/loggedin_home/inventory/advanced_search_inventory/delete/{{row.vin}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Deleeete</a> -->
+                  {% endif %}
+
+
+
+                  <!-- {{url_for('add_vehicle')}} -->
+                </td>
+              </tr>
+
+
+<!--               <div id="modalview{{ row.vin }}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+
+                    <div class="modal-header text-center">
+                      <button type="button" class="close" data-dismiss="modal"></button>
+                      <h4 class="modal-title w-100">View vehicle information</h4>
+                    </div>
+
+                    <div class="modal-body">
+                      <form action="#" method="post">
+
+                        <div class="form-group">
+                          <label>Vehicle VIN:</label>
+                          <input type="text"  name="vin" value="{{row.vin}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Vehicle Type:</label>
+                          <input type="text" class="form-control" name="type" value="{{row.v_type}}" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Manufacturer:</label>
+                          <input type="text" class="form-control" name="manufacturer_name" value="{{row.manufacturer_name}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Color:</label>
+                          <input type="text" class="form-control" name="color" value="{{row.color}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Model Name:</label>
+                          <input type="text" class="form-control" name="model_name" value="{{row.model_name}}" autocomplete="off" readonly>
+                        </div>
+                        <div class="form-group">
+                          <label>Model Year:</label>
+                          <input type="text" class="form-control" name="model_year" value="{{row.model_year}}" readonly>
+                        </div>
+
+
+
+                        <div class="form-group">
+                          <label>List Price:</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                              </div>
+                              <input type="text" class="form-control" value="{{row.list_price}}" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Inventory Status:</label>
+                          <input type="text" class="form-control" name="inventory_status" value="{{row.inventory_status}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Addition Date:</label>
+                          <input type="text" class="form-control" name="addition_date" value="{{row.addition_date}}" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Description:</label>
+                          <input type="text" class="form-control" name="description" value="{{row.description}}" readonly>
+                        </div>
+                      </form>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div> -->
+
+              <!-- modal edit the current record -->
+              <div id="modaledit{{ row.vin }}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header text-center">
+                      <button type="button" class="close" data-dismiss="modal"></button>
+                      <h4 class="modal-title w-100">Update the vehicle information</h4>
+                    </div>
+
+                    <div class="modal-body">
+                      <form action="{{url_for('update')}}" method="post">
+                        <div class="form-group">
+                          <label>Vehicle VIN:</label>
+                          <input type="text"  name="vin" value="{{row.vin}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Vehicle Type:</label>
+                          <input type="text" class="form-control" name="type" value="{{row.v_type}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Manufacturer:</label>
+                          <input type="text" class="form-control" name="manufacturer_name" value="{{row.manufacturer_name}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Color:</label>
+                          <input type="text" class="form-control" name="color" value="{{row.color}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Model Name:</label>
+                          <input type="number" class="form-control" name="model_name" value="{{row.model_name}}" autocomplete="off" >
+                          <!-- <label for="model_name">Model Name:</label>
+                              <select class="form-control" id="model_name">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                              </select> -->
+                        </div>
+
+
+                        <div class="form-group">
+                          <label>Model Year:</label>
+                          <input type="text" class="form-control" name="model_year" value="{{row.model_year}}" autocomplete="off" >
+                        </div>
+
+
+                        <div class="form-group">
+                          <label>Invoice Price:</label>
+                          <input type="text" class="form-control" name="invoice_price" value="{{row.invoice_price}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>List Price:</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                              </div>
+                              <input type="text" class="form-control" value="{{row.list_price}}">
+                            </div>
+                        </div>
+
+                        <!-- <div class="form-group">
+                          <label>Inventory Status:</label>
+                          <input type="text" class="form-control" name="inventory_status" value="{{row.inventory_status}}" autocomplete="off" >
+                        </div> -->
+
+                        <div class="form-group">
+                          <label>Addition Date:</label>
+                          <input type="text" class="form-control" name="addition_date" value="{{row.addition_date}}" autocomplete="off" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Description:</label>
+                          <input type="text" class="form-control" name="description" value="{{row.description}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <button class="btn btn-primary" type="sbumit">Update</button>
+                        </div>
+                      </form>
+
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              </div>
+
+
+              <!-- modified version start from here nov1124 (solved the problem that view button did not show the details)-->
+              <!-- modal view the current record -->
+              <div id="modalview{{ row.vin }}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+
+                    <div class="modal-header text-center">
+                      <button type="button" class="close" data-dismiss="modal"></button>
+                      <h4 class="modal-title w-100">View vehicle information</h4>
+                    </div>
+
+                    <div class="modal-body">
+                      <form action="#" method="post">
+
+                        <div class="form-group">
+                          <label>Vehicle VIN:</label>
+                          <input type="text"  name="vin" value="{{row.vin}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Vehicle Type:</label>
+                          <input type="text" class="form-control" name="type" value="{{row.v_type}}" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Manufacturer:</label>
+                          <input type="text" class="form-control" name="manufacturer_name" value="{{row.manufacturer_name}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Color:</label>
+                          <input type="text" class="form-control" name="color" value="{{row.color}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Model Name:</label>
+                          <input type="text" class="form-control" name="model_name" value="{{row.model_name}}" autocomplete="off" readonly>
+                        </div>
+                        <div class="form-group">
+                          <label>Model Year:</label>
+                          <input type="text" class="form-control" name="model_year" value="{{row.model_year}}" readonly>
+                        </div>
+
+                        <!-- <div class="form-group">
+                          <label>Year Entered:</label>
+                          <input type="text" class="form-control" name="year_entered" value="{{row.year_entered}}" readonly>
+                        </div> -->
+
+                        <div class="form-group">
+                          <label>Invoice Price:</label>
+                          <input type="text" class="form-control" name="invoice_price" value="{{row.invoice_price}}" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>List Price:</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                              </div>
+                              <input type="text" class="form-control" value="{{row.list_price}}" readonly>
+                            </div>
+                        </div>
+
+                        <!-- <div class="form-group">
+                          <label>Inventory Status:</label>
+                          <input type="text" class="form-control" name="inventory_status" value="{{row.inventory_status}}" readonly>
+                        </div> -->
+
+                        <div class="form-group">
+                          <label>Addition Date:</label>
+                          <input type="text" class="form-control" name="addition_date" value="{{row.addition_date}}" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Description:</label>
+                          <input type="text" class="form-control" name="description" value="{{row.description}}" readonly>
+                        </div>
+                      </form>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+
+
+
+              <!-- modal sell the current record -->
+              <div id="modalsell{{ row.vin }}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header text-center">
+                      <button type="button" class="close" data-dismiss="modal"></button>
+                      <h4 class="modal-title w-100">Vehicle Transaction information</h4>
+                    </div>
+
+                    <div class="modal-body">
+                      <form action="{{url_for('customer')}}" method="post">
+                        <div class="form-group">
+                          <label>Vehicle VIN:</label>
+                          <input type="text"  name="vin" value="{{row.vin}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Vehicle Type:</label>
+                          <input type="text" class="form-control" name="v_type" value="{{row.v_type}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Manufacturer:</label>
+                          <input type="text" class="form-control" name="manufacturer_name" value="{{row.manufacturer_name}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Color:</label>
+                          <input type="text" class="form-control" name="color" value="{{row.color}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Model Name:</label>
+                          <input type="text" class="form-control" name="model_name" value="{{row.model_name}}" autocomplete="off" >
+                          <!-- <label for="model_name">Model Name:</label>
+                              <select class="form-control" id="model_name">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                              </select> -->
+                        </div>
+
+
+                        <div class="form-group">
+                          <label>Model Year:</label>
+                          <input type="text" class="form-control" name="model_year" value="{{row.model_year}}" autocomplete="off" >
+                        </div>
+
+
+                        <div class="form-group">
+                          <label>Invoice Price:</label>
+                          <input type="number" step="0.01" class="form-control" name="invoice_price" value="{{row.invoice_price}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>List Price:</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                              </div>
+                              <input type="number"  step="0.01" class="form-control" name="list_price" value="{{row.list_price}}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Sold Price:</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                              </div>
+                              {% if user in owner_list %}
+                              <input type="number" step="0.01" class="form-control" name="sold_price" required="required">
+                              {% else %}
+                              <input type="number" step="0.01" class="form-control" name="sold_price" required="required" min="{{min_sold_price[row.vin]}}">
+                              {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- <div class="form-group">
+                          <label>Inventory Status:</label>
+                          <input type="text" class="form-control" name="inventory_status" value="{{row.inventory_status}}" autocomplete="off" >
+                        </div> -->
+
+                        <div class="form-group">
+                          <label>Sold Date:</label>
+                          <input type="text" class="form-control" name="sold_date" value="{{curr_date}}" autocomplete="off" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Description:</label>
+                          <input type="text" class="form-control" name="description" value="{{row.description}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Sold By:</label>
+                          <input type="text" class="form-control" name="soldby" value="{{user}}" autocomplete="off" >
+                          <!-- <select  class="selectpicker" name='soldby' data-live-search="true" data-size="10" style="overflow: hidden;" required="required">
+                          <option selected value="">Enter UserID</option>
+                          {% for item in (salespeople_list + owner_list)  %}
+                          <option  data-tokens="{{ item }}">{{ item }}</option>
+                          {% endfor %}
+                          </select> -->
+                        </div>
+
+
+<!--             <th>
+              Sold By:
+            </th>
+
+            <td><select  class="selectpicker" name='soldby' data-live-search="true" data-size="10" style="overflow: hidden; width:500px;">
+              <option selected value="">Enter UserID</option>
+              {% for item in (inventoryclerk_list + owner_list)  %}
+
+               <option  data-tokens="{{ item }}">{{ item }}</option>
+              {% endfor %}
+            </select></td>
+          </tr> -->
+
+                        <div class="form-group">
+                          <button class="btn btn-primary" type="sbumit" name="btn" value=
+                          "sell">Sell Vehicle</button>
+                        </div>
+                      </form>
+
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              </div>
+
+
+
+              {% endfor %}
+            </tbody>
+      </table>
+
+
+  <!-- alll -->
+        <!-- modify end here 11-30-->
+                       <h3>All Vehicle:</h3>
+
+      <table id="vehicle" class="table table-striped" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+            <thead>
+              <tr>
+                <th>VIN</th>
+                <th>Vehicle Type</th>
+                <th>Manufacturer</th>
+                <th>Color</th>
+                <th>Model Name</th>
+                <th>Model Year</th>
+                <th>Invoice Price</th>
+                <th>List Price</th>
+                <th>Additon Date</th>
+                <th>Description</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in data_all%}
+              <tr>
+                <td><a href="{{ url_for('vehicle_detail_repair_part', rowData=row.vin)}}" data-name="VIN">{{row.vin}}</a></td>
+                <td  data-name="Vehicle Type">{{row.v_type}}</td>
+                <td data-name="Manufacturer">{{row.manufacturer_name}}</td>
+                <td  data-name="Color">{{row.color}}</td>
+                <td data-name="Model Name">{{row.model_name}}</td>
+                <td data-name="Model Year">{{row.model_year}}</td>
+                <td data-name="Invoice Price">{{row.invoice_price}}</td>
+                <td data-name="List Price">{{row.list_price}}</td>
+                <td data-name="Additon Date">{{row.addition_date}}</td>
+                <td data-name="Description">{{row.description}}</td>
+                <td >
+
+                  <a href="/loggedin_home/inventory/advanced_search_inventory/view/{{row.vin}}" class="btn btn-success btn-xs" data-toggle="modal" data-target="#modalview{{row.vin}}">View</a>
+                  &nbsp;
+
+                  {% if user in owner_list %}
+                  <!-- <a href="/loggedin_home/inventory/advanced_search_inventory/update/{{row.vin}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.vin}}">Edit</a> -->
+                  &nbsp;
+                  <!-- <a href="/loggedin_home/inventory/advanced_search_inventory/delete/{{row.vin}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Deleeete</a> -->
+                  {% endif %}
+
+
+                  {% if row in data %}
+                  <a href="/loggedin_home/inventory/advanced_search_inventory/view/{{row.vin}}"  class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modalsell{{row.vin}}">Sell</a>
+                  {% endif %}
+                  &nbsp;
+
+
+                  <!-- {{url_for('add_vehicle')}} -->
+                </td>
+              </tr>
+
+
+<!--               <div id="modalview{{ row.vin }}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+
+                    <div class="modal-header text-center">
+                      <button type="button" class="close" data-dismiss="modal"></button>
+                      <h4 class="modal-title w-100">View vehicle information</h4>
+                    </div>
+
+                    <div class="modal-body">
+                      <form action="#" method="post">
+
+                        <div class="form-group">
+                          <label>Vehicle VIN:</label>
+                          <input type="text"  name="vin" value="{{row.vin}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Vehicle Type:</label>
+                          <input type="text" class="form-control" name="type" value="{{row.v_type}}" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Manufacturer:</label>
+                          <input type="text" class="form-control" name="manufacturer_name" value="{{row.manufacturer_name}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Color:</label>
+                          <input type="text" class="form-control" name="color" value="{{row.color}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Model Name:</label>
+                          <input type="text" class="form-control" name="model_name" value="{{row.model_name}}" autocomplete="off" readonly>
+                        </div>
+                        <div class="form-group">
+                          <label>Model Year:</label>
+                          <input type="text" class="form-control" name="model_year" value="{{row.model_year}}" readonly>
+                        </div>
+
+
+
+                        <div class="form-group">
+                          <label>List Price:</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                              </div>
+                              <input type="text" class="form-control" value="{{row.list_price}}" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Inventory Status:</label>
+                          <input type="text" class="form-control" name="inventory_status" value="{{row.inventory_status}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Addition Date:</label>
+                          <input type="text" class="form-control" name="addition_date" value="{{row.addition_date}}" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Description:</label>
+                          <input type="text" class="form-control" name="description" value="{{row.description}}" readonly>
+                        </div>
+                      </form>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div> -->
+
+              <!-- modal edit the current record -->
+              <div id="modaledit{{ row.vin }}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header text-center">
+                      <button type="button" class="close" data-dismiss="modal"></button>
+                      <h4 class="modal-title w-100">Update the vehicle information</h4>
+                    </div>
+
+                    <div class="modal-body">
+                      <form action="{{url_for('update')}}" method="post">
+                        <div class="form-group">
+                          <label>Vehicle VIN:</label>
+                          <input type="text"  name="vin" value="{{row.vin}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Vehicle Type:</label>
+                          <input type="text" class="form-control" name="type" value="{{row.v_type}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Manufacturer:</label>
+                          <input type="text" class="form-control" name="manufacturer_name" value="{{row.manufacturer_name}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Color:</label>
+                          <input type="text" class="form-control" name="color" value="{{row.color}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Model Name:</label>
+                          <input type="number" class="form-control" name="model_name" value="{{row.model_name}}" autocomplete="off" >
+                          <!-- <label for="model_name">Model Name:</label>
+                              <select class="form-control" id="model_name">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                              </select> -->
+                        </div>
+
+
+                        <div class="form-group">
+                          <label>Model Year:</label>
+                          <input type="text" class="form-control" name="model_year" value="{{row.model_year}}" autocomplete="off" >
+                        </div>
+
+
+                        <div class="form-group">
+                          <label>Invoice Price:</label>
+                          <input type="text" class="form-control" name="invoice_price" value="{{row.invoice_price}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>List Price:</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                              </div>
+                              <input type="text" class="form-control" value="{{row.list_price}}">
+                            </div>
+                        </div>
+
+                        <!-- <div class="form-group">
+                          <label>Inventory Status:</label>
+                          <input type="text" class="form-control" name="inventory_status" value="{{row.inventory_status}}" autocomplete="off" >
+                        </div> -->
+
+                        <div class="form-group">
+                          <label>Addition Date:</label>
+                          <input type="text" class="form-control" name="addition_date" value="{{row.addition_date}}" autocomplete="off" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Description:</label>
+                          <input type="text" class="form-control" name="description" value="{{row.description}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <button class="btn btn-primary" type="sbumit">Update</button>
+                        </div>
+                      </form>
+
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              </div>
+
+
+              <!-- modified version start from here nov1124 (solved the problem that view button did not show the details)-->
+              <!-- modal view the current record -->
+              <div id="modalview{{ row.vin }}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+
+                    <div class="modal-header text-center">
+                      <button type="button" class="close" data-dismiss="modal"></button>
+                      <h4 class="modal-title w-100">View vehicle information</h4>
+                    </div>
+
+                    <div class="modal-body">
+                      <form action="#" method="post">
+
+                        <div class="form-group">
+                          <label>Vehicle VIN:</label>
+                          <input type="text"  name="vin" value="{{row.vin}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Vehicle Type:</label>
+                          <input type="text" class="form-control" name="type" value="{{row.v_type}}" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Manufacturer:</label>
+                          <input type="text" class="form-control" name="manufacturer_name" value="{{row.manufacturer_name}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Color:</label>
+                          <input type="text" class="form-control" name="color" value="{{row.color}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Model Name:</label>
+                          <input type="text" class="form-control" name="model_name" value="{{row.model_name}}" autocomplete="off" readonly>
+                        </div>
+                        <div class="form-group">
+                          <label>Model Year:</label>
+                          <input type="text" class="form-control" name="model_year" value="{{row.model_year}}" readonly>
+                        </div>
+
+                        <!-- <div class="form-group">
+                          <label>Year Entered:</label>
+                          <input type="text" class="form-control" name="year_entered" value="{{row.year_entered}}" readonly>
+                        </div> -->
+
+                        <div class="form-group">
+                          <label>Invoice Price:</label>
+                          <input type="text" class="form-control" name="invoice_price" value="{{row.invoice_price}}" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>List Price:</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                              </div>
+                              <input type="text" class="form-control" value="{{row.list_price}}" readonly>
+                            </div>
+                        </div>
+
+                        <!-- <div class="form-group">
+                          <label>Inventory Status:</label>
+                          <input type="text" class="form-control" name="inventory_status" value="{{row.inventory_status}}" readonly>
+                        </div> -->
+
+                        <div class="form-group">
+                          <label>Addition Date:</label>
+                          <input type="text" class="form-control" name="addition_date" value="{{row.addition_date}}" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Description:</label>
+                          <input type="text" class="form-control" name="description" value="{{row.description}}" readonly>
+                        </div>
+                      </form>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+
+
+
+              <!-- modal sell the current record -->
+              <div id="modalsell{{ row.vin }}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header text-center">
+                      <button type="button" class="close" data-dismiss="modal"></button>
+                      <h4 class="modal-title w-100">Vehicle Transaction information</h4>
+                    </div>
+
+                    <div class="modal-body">
+                      <form action="{{url_for('customer')}}" method="post">
+                        <div class="form-group">
+                          <label>Vehicle VIN:</label>
+                          <input type="text"  name="vin" value="{{row.vin}}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Vehicle Type:</label>
+                          <input type="text" class="form-control" name="v_type" value="{{row.v_type}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Manufacturer:</label>
+                          <input type="text" class="form-control" name="manufacturer_name" value="{{row.manufacturer_name}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Color:</label>
+                          <input type="text" class="form-control" name="color" value="{{row.color}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Model Name:</label>
+                          <input type="text" class="form-control" name="model_name" value="{{row.model_name}}" autocomplete="off" >
+                          <!-- <label for="model_name">Model Name:</label>
+                              <select class="form-control" id="model_name">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                              </select> -->
+                        </div>
+
+
+                        <div class="form-group">
+                          <label>Model Year:</label>
+                          <input type="text" class="form-control" name="model_year" value="{{row.model_year}}" autocomplete="off" >
+                        </div>
+
+
+                        <div class="form-group">
+                          <label>Invoice Price:</label>
+                          <input type="number" step="0.01" class="form-control" name="invoice_price" value="{{row.invoice_price}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>List Price:</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                              </div>
+                              <input type="number"  step="0.01" class="form-control" name="list_price" value="{{row.list_price}}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Sold Price:</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                              </div>
+                              {% if user in owner_list %}
+                              <input type="number" step="0.01" class="form-control" name="sold_price" required="required">
+                              {% else %}
+                              <input type="number" step="0.01" class="form-control" name="sold_price" required="required" min="{{min_sold_price[row.vin]}}">
+                              {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- <div class="form-group">
+                          <label>Inventory Status:</label>
+                          <input type="text" class="form-control" name="inventory_status" value="{{row.inventory_status}}" autocomplete="off" >
+                        </div> -->
+
+                        <div class="form-group">
+                          <label>Sold Date:</label>
+                          <input type="text" class="form-control" name="sold_date" value="{{curr_date}}" autocomplete="off" readonly >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Description:</label>
+                          <input type="text" class="form-control" name="description" value="{{row.description}}" autocomplete="off" >
+                        </div>
+
+                        <div class="form-group">
+                          <label>Sold By:</label>
+                          <input type="text" class="form-control" name="soldby" value="{{user}}" autocomplete="off" >
+                          <!-- <select  class="selectpicker" name='soldby' data-live-search="true" data-size="10" style="overflow: hidden;" required="required">
+                          <option selected value="">Enter UserID</option>
+                          {% for item in (salespeople_list + owner_list)  %}
+                          <option  data-tokens="{{ item }}">{{ item }}</option>
+                          {% endfor %}
+                          </select> -->
+                        </div>
+
+
+<!--             <th>
+              Sold By:
+            </th>
+
+            <td><select  class="selectpicker" name='soldby' data-live-search="true" data-size="10" style="overflow: hidden; width:500px;">
+              <option selected value="">Enter UserID</option>
+              {% for item in (inventoryclerk_list + owner_list)  %}
+
+               <option  data-tokens="{{ item }}">{{ item }}</option>
+              {% endfor %}
+            </select></td>
+          </tr> -->
+
+                        <div class="form-group">
+                          <button class="btn btn-primary" type="sbumit" name="btn" value=
+                          "sell">Sell Vehicle</button>
+                        </div>
+                      </form>
+
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              </div>
+
+
+
+              {% endfor %}
+            </tbody>
+      </table>
+
+
+ 		 </div>
+		</div>
+  </div>
+							<!-- modified version end from here nov1124 -->
+{% endif %}
+
+
+{% endblock%}

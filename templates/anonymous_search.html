@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Public Search</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">   <!-- icons usage -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css">
+
+<!-- Bootstrap CSS CDN -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<!-- import jquery cdn -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<!-- import popper.js cdn -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<!-- import javascript cdn -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+<!-- Font Awesome JS -->
+<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+  <!-- data table -->
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+
+
+<head>
+<body>
+<div>
+    <nav class="navbar navbar-dark" style="background-color: #9933ff;">
+        <div class="container-fluid">
+            <a href="#" class="navbar-brand">
+                <img src="/static/images/logo2.png"  height="28" alt="logo2.png"/>
+            </a>
+						<div class="topnav-right">
+							<a href="{{ url_for('anonymous_search') }}" style="color: white;"><i class="fa fa-search"></i>Go Back To Search Page</i></a>
+							<a href="{{ url_for('login') }}" style="color: white;" ><i class="fa fa-home"></i>Go Back To Login Page</a>
+					  </div>
+
+        </div>
+
+
+    </nav>
+</div>
+
+<div class="container">
+  </br>
+    <!-- <h2 class='jumbotron' style="text-transform: capitalize;">Welcome, {{session.username}} !</h3> -->
+				<h2>Welcome to Jaunty Jalopies!</h2>
+				<hr class="my-4">
+				<h5>There are {{ num_unsold_vehicles['num_unsold']}} vehicles for you to choose! Please fill in the search form to start searching:</h5>
+				<!-- <h5>{{msg}}</h5> -->
+</div>
+
+
+
+
+		<!-- new added -->
+		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+		<script>
+      $(document).ready(function() {
+          // DataTable
+          var table = $('#vehicle').DataTable({
+						   "searching": false,  //remove search bar
+						  // language: { search: ""},  //remove search
+              initComplete: function () {
+                  // Apply the search
+                  this.api().columns().every( function () {
+                      var that = this;
+
+                      $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                          if ( that.search() !== this.value ) {
+                              that
+                                  .search( this.value )
+                                  .draw();
+                          }
+                      } );
+                  } );
+              }
+          });
+
+      } );
+      </script>
+
+
+
+	<div class="container">
+    <div class="content">
+			<form action= "{{ url_for('anonymous_search_result') }}" method="post">
+				<fieldset>
+					<legend>Vehicle Information</legend>
+					<table id="sample_data" class="table table-bordered table-striped">
+						<colgroup><col align="right"></col><col align="left"></col></colgroup>
+
+						<tr><th>Vehicle Type:</th>
+							<td>
+                <select class="form-select" name="vehicle_type">
+                  <option selected value="">Select Vehicle Type</option>
+                  {% for item in vehicle_type %}
+                  <option value="{{ item.vehicle_type }}">{{ item.vehicle_type }}</option>
+                  {% endfor %}
+                </select>
+							<td></tr>
+
+						<tr><th>Manufacturer:</th>
+							<td>
+								<select class="form-select" name="manufacturer_name">
+									<option selected value="">Select Maunufacturer</option>
+									{% for item in manufacturer_name %}
+									<option value="{{ item.manufacturer_name }}">{{ item.manufacturer_name }}</option>
+									{% endfor %}
+								</select>
+							<td></tr>
+
+						<tr><th>Model Name:</th>
+							<td>
+								<select class="form-select" name="model_name">
+									<option selected value="">Select Model Name</option>
+									{% for item in model_name %}
+									<option value="{{ item.model_name }}">{{ item.model_name }}</option>
+									{% endfor %}
+								</select>
+							<td></tr>
+
+<!-- modified year input valid number 11-25 11-26-->
+            <tr><th>Model Year (YYYY):</th>
+              <td><input type="number" name="model_year" max="2022" min="1900" title="modelyear" placeholder="YYYY" autocomplete="off" value=''><td></tr>
+<!-- modified year input valid number 11-25 11-26-->
+
+						<tr><th>Color:</th>
+							<td>
+								<select class="form-select" name="color">
+									<option selected value="">Select Vehicle Color</option>
+									{% for item in color %}
+									<option value="{{ item.color }}">{{ item.color }}</option>
+									{% endfor %}
+								</select>
+							<td></tr>
+
+                <tr>
+                  <th>List Price ($):</th>
+                  <td>
+                    <div class="input-group-prepend">
+                      <select class="form-select" name="comp_select" aria-label="Default select example">
+                        <option name="greaterthan" value="greaterthan">Greater than</option>
+                        <option name="lessthan" value="lessthan">Less or equal than</option>
+                      </select>
+                       <span class="input-group-text">$</span>
+                      <input type="number" class="form-control" name="list_price" min="0" title="listprice" value=''>
+                    </div>
+                  <td>
+                </tr>
+
+						<tr><th>Keyword:</th>
+							<td><textarea name="keyword" placeholder="You can enter any key words using the information above." rows="4" cols="50" title="comments" value=''></textarea></td></tr>
+
+						<tr><td></td><td>
+              <button type="submit" class="btn btn-primary" value="Submit">Submit</button>
+              <button class="btn btn-warning" type="reset" value="Reset">Reset</button>
+            </td></tr>
+					</table>
+				</fieldset>
+			</form>
+   </div>
+ </div>
+
+
+
+</body>
+</head>

@@ -1,0 +1,43 @@
+{% extends 'home_base_loggedin.html' %}
+
+{% block content %}
+
+<div class="container">
+
+
+    <div class="row">
+  		<div class="col md-12">
+
+        <h1><a href="#" class="badge badge-warning center" >Top Salesperson</a></h1>
+
+  			<table id="vehicle" class="table" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+              <thead>
+                <tr>
+                  <th>Number of Sold Vehicles</th>
+                  <th>Total Sales Income $</th>
+                  <th>Salesperson</th>
+                  <th>Salesperson First Name</th>
+                  <th>Salesperson Last Name</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for row in top_salesperson_sales_summary %}
+                  <tr>
+                    <td data-name="Number of Sold Vehicles">{{row.vehicle_sold}}</td>
+                    <td data-name="Total Sales Income $">{{row.total_sales}}</td>
+                    <td data-name="Salesperson">{{row.username}}</td>
+                    <td data-name="Salesperson First Name">{{row.first_name}}</td>
+                    <td data-name="Salesperson Last Name">{{row.last_name}}</td>
+
+                  </tr>
+                {% endfor %}
+              </tbody>
+
+        </table>
+
+
+
+  </div>
+
+{% endblock%}

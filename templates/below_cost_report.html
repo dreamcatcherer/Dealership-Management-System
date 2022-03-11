@@ -1,0 +1,58 @@
+{% extends 'home_base_loggedin.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row">
+  		<div class="col md-12">
+
+        <h1><a href="#" class="badge badge-warning center" >Below Cost Report</a></h1>
+
+  			<table id="vehicle" class="table" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+              <thead>
+                <tr>
+                  <th>VIN</th>
+                  <th>Sold Date</th>
+                  <th>Invoice Price</th>
+                  <th>Sold Price</th>
+                  <th>Ratio of Sold Price/Invoice Price(%)</th>
+                  <th>Customer Name</th>
+                  <th>Salesperson Name</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for row in below_cost %}
+                  {% if row.ratio>'95' %}
+                  <tr>
+                    <td data-name=">VIN">{{row.vin}}</td>
+                    <td data-name=">Sold Date">{{row.purchase_date_time}}</td>
+                    <td data-name="Invoice Price">{{row.invoice_price}}</td>
+                    <td data-name="Sold Price">{{row.sold_price}}</td>
+                    <td data-name="Ratio of Sold Price/Invoice Price(%)">{{row.ratio}}</td>
+                    <td data-name="Customer Name">{{row.customer_name}}</td>
+                    <td data-name="Salesperson Name">{{row.sales_person}}</td>
+                  </tr>
+                  {% else %}
+                  <tr>
+                    <td class="table-danger" data-name=">VIN">{{row.vin}}</td>
+                    <td class="table-danger" data-name=">Sold Date">{{row.purchase_date_time}}</td>
+                    <td class="table-danger" data-name="Invoice Price">{{row.invoice_price}}</td>
+                    <td class="table-danger" data-name="Sold Price">{{row.sold_price}}</td>
+                    <td class="table-danger" data-name="Ratio of Sold Price/Invoice Price(%)">{{row.ratio}}</td>
+                    <td class="table-danger" data-name="Customer Name">{{row.customer_name}}</td>
+                    <td class="table-danger" data-name="Salesperson Name">{{row.sales_person}}</td>
+                  </tr>
+                  {% endif %}
+
+                {% endfor %}
+              </tbody>
+
+        </table>
+
+
+
+  </div>
+
+{% endblock%}

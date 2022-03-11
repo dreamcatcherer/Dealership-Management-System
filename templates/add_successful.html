@@ -1,0 +1,15 @@
+{% extends 'home_base_loggedin.html' %}
+
+
+{% block content %}
+<div class="container">
+  <div class="content">
+    {% if msg %}
+   <div class="msg">{{ msg }}</div>
+   {% else %}
+   <h3>Added Customer Successfully!!</h3>
+   {% endif %}
+</div>
+</div>
+
+{% endblock %}

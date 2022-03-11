@@ -1,0 +1,38 @@
+{% extends 'home_base_loggedin.html' %}
+
+{% block content %}
+
+<div class="container">
+
+  <h2>Report:</h2>
+    <div class="row">
+  		<div class="col md-12">
+
+        <h1><a href="#" class="badge badge-warning center" >Parts Statistics</a></h1>
+
+  			<table id="vehicle" class="table table-striped" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+              <thead>
+                <tr>
+                  <th>Vendor's Name</th>
+                  <th>Number of the Parts</th>
+                  <th>Total Cost ($)</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for row in parts_sales %}
+                <tr>
+                  <td data-name=">Vendor's Name">{{row.vendor_name}}</td>
+                  <td data-name="Number of the Parts">{{row.number_of_part}}</td>
+                  <td data-name=">Total Cost ($)">{{row.total_cost}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+
+        </table>
+
+
+
+  </div>
+
+{% endblock%}

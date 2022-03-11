@@ -1,0 +1,38 @@
+{% extends 'home_base_loggedin.html' %}
+
+{% block content %}
+
+<div class="container">
+
+
+    <div class="row">
+  		<div class="col md-12">
+
+        <h1><a href="#" class="badge badge-warning center" >Average Time (days) in Inventory</a></h1>
+
+  			<table id="vehicle" class="table table-striped" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+              <thead>
+                <tr>
+                  <!-- <th>VIN</th> -->
+                  <th>Vehicle Type</th>
+                  <th>Average Time in Inventory (days)</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for row in avg_time_inventory %}
+                <tr>
+                  <!-- <td data-name=">VIN">{{row.vin}}</td> -->
+                  <td data-name="Vehicle Type">{{row.type}}</td>
+                  <td data-name="Average Time in Inventory (days)">{{row.Avg_in_inventory}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+
+        </table>
+
+
+
+  </div>
+
+{% endblock%}

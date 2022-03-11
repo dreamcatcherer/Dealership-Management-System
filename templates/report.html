@@ -1,0 +1,186 @@
+{% extends 'home_base_loggedin.html' %}
+
+{% block content %}
+
+{% if user in manager_list %}
+
+<div class="container">
+
+  <h2>Choose the report you want to check</h2>
+
+
+      <!-- cards row starts here-->
+      <div class="card-deck">
+        <div class="card" >
+          <div class="card-header text-white bg-success mb-3">Sales by Color</div>
+          <div class="card-body">
+            <p class="card-text">Vehicles sold in previous 30 days, previous year, and over all time by Color. </p>
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Color Sales Report
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{{url_for('color_sales_report')}}">Color Sales</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+          <div class="card" >
+            <div class="card-header text-white bg-primary mb-3">Sales by Type</div>
+            <div class="card-body">
+              <p class="card-text">Vehicles sold in previous 30 days, previous year, and over all time by Type. </p>
+              <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Type Sales Report
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="{{url_for('type_sales_report')}}">Type Sales</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="card" >
+            <div class="card-header text-white bg-dark mb-3">Sales by Manufacturer</div>
+            <div class="card-body">
+              <p class="card-text">Vehicles sold in previous 30 days, previous year, and over all time by Manfacturer. </p>
+              <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Manfacturer Sales Report
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="{{url_for('manufacturer_sales_report')}}">Manfacturer Sales</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="card" >
+            <div class="card-header text-white mb-3" style="background-color: purple;">Below Cost</div>
+            <div class="card-body">
+              <p class="card-text">Below Cost Reports</p>
+              <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Below Cost
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="{{url_for('below_cost_report')}}">Below Cost</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+</div>
+
+
+
+  &nbsp;
+
+
+        <div class="card-deck">
+
+
+
+          <div class="card" >
+            <div class="card-header text-white mb-3" style="background-color: #e83e8c;">Average Time in Inventory</div>
+            <div class="card-body">
+              <p class="card-text">Average Time in Inventory</p>
+              <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Average Time in Inventory
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="{{url_for('avg_time_inventory_report')}}">Average Time in Inventory</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="card" >
+            <div class="card-header text-white mb-3" style="background-color: #20c997;">Parts Statistics</div>
+            <div class="card-body">
+              <p class="card-text">Parts Statistics</p>
+              <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Parts Statistics
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="{{url_for('parts_stats_report')}}">Parts Statistics</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+        <div class="card" >
+          <div class="card-header text-white bg-warning mb-3">Gross Customer Income</div>
+          <div class="card-body">
+            <p class="card-text">The top 15 customers, the grossincome received from them via vehicle sales and/or repairs (including any repairs in progress).</p>
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Select Options
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{{url_for('gross_customers_income_report')}}">Top 15 Customers on Vehicle Repairs and Vehicle Sales and Top Salesperson</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    </div>
+
+
+
+      <!-- card row ends here -->
+
+  &nbsp;
+
+  <!-- cards row starts here-->
+  <div class="card-deck">
+
+
+
+    <div class="card" >
+      <div class="card-header text-white bg-info mb-3">Repairs Summary</div>
+      <div class="card-body">
+        <p class="card-text">Repairs by Vehicle Type, Vehicle Model, and Manufacturer</p>
+        <div class="dropdown">
+          <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Repairs By Type/Model/Manufacturer
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="{{url_for('repair_report')}}">Repairs by Type/Model/Manufacturer</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" >
+      <div class="card-header text-white mb-3" style="background-color: #fd7e14;">Sales Reports</div>
+      <div class="card-body">
+        <p class="card-text">Monthly and Yearly Reportsr</p>
+        <div class="dropdown">
+          <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Monthly/Yearly Sales Summary and Top Salesperson
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="{{url_for('month_year_sales_summary_report')}}">Monthly/Yearly Sales Summary and Top Salesperson</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- card row ends here -->
+
+
+{% endif %}
+{% endblock%}

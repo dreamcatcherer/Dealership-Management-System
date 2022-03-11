@@ -1,0 +1,49 @@
+{% extends 'home_base_loggedin.html' %}
+
+{% block content %}
+
+
+{% if user in manager_list %}
+<div class="container">
+
+
+    <div class="row">
+  		<div class="col md-12">
+
+        <h1><a href="#" class="badge badge-warning center" >All Sales Transactions</a></h1>
+
+  			<table id="vehicle" class="table table-striped" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+              <thead>
+                <tr>
+                  <th>VIN</th>
+                  <th>Sold Date</th>
+                  <th>Sold Price</th>
+                  <th>Customer ID</th>
+                  <th>Salesperson</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for row in sales_orders %}
+
+                  <tr>
+                    <td data-name=">VIN">{{row.vin}}</td>
+                    <td data-name=">Sold Date">{{row.purchase_date_time}}</td>
+                    <td data-name="Sold Price">{{row.sold_price}}</td>
+                    <td data-name="Customer ID">{{row.customer_id}}</td>
+                    <td data-name="Salesperson">{{row.username}}</td>
+                  </tr>
+
+
+                {% endfor %}
+              </tbody>
+
+        </table>
+
+
+
+  </div>
+
+
+{% endif %}
+{% endblock%}

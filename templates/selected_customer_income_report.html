@@ -1,0 +1,90 @@
+{% extends 'home_base_loggedin.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row">
+  		<div class="col md-12">
+
+        <h1><a href="#" class="badge badge-warning center">Selected Customer Gross Income</a></h1>
+
+       <!-- 1. sales table -->
+        <table id="vehicle" class="table" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+              <caption style="caption-side: top;text-align: center;"><h1>Sales records</h1></caption>
+              <thead>
+                <tr>
+                  <th>VIN</th>
+                  <th>Sale Date</th>
+                  <th>Sold Price</th>
+                  <th>Manufacturer</th>
+                  <th>Model year</th>
+                  <th>Model Name</th>
+                  <th>Salesperson</th>
+                  <th>Salesperson First Name</th>
+                  <th>Salesperson Last Name</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for row in sales_records %}
+
+                  <tr>
+                    <td data-name="VIN">{{row.vin}}</td>
+                    <td data-name="Sale Date">{{row.sale_date}}</td>
+                    <td data-name="Sold Price">{{row.sold_price}}</td>
+                    <td data-name="Manufacturer">{{row.manufacturer_name}}</td>
+                    <td data-name="Model year">{{row.model_year}}</td>
+                    <td data-name="Model Name">{{row.model_name}}</td>
+                    <td data-name="Salesperson">{{row.salesperson_name}}</td>
+                    <td data-name="Salesperson First Name">{{row.first_name}}</td>
+                    <td data-name="Salesperson Last Name">{{row.last_name}}</td>
+                  </tr>
+
+                {% endfor %}
+              </tbody>
+
+        </table>
+
+      <!-- 2. repair table -->
+      <table id="vehicle" class="table " style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+				   <caption style="caption-side: top;text-align: center;"><h1>Repairs records</h1></caption>
+
+            <thead>
+              <tr>
+                <tr>
+	                <th>VIN</th>
+	                <th>Start Date</th>
+	                <th>End Date</th>
+	                <th>Odometer</th>
+	                <th>Labor cost ($)</th>
+									<th>Part cost ($)</th>
+									<th>Total cost ($)</th>
+									<th>Service Writer</th>
+                  <th>Service Writer First Name</th>
+                  <th>Service Writer Last Name</th>
+              </tr>
+            </thead>
+            <tbody>
+
+
+
+              {% for row in repair_records %}
+              <tr>
+                <td data-name="VIN">{{row.vin}}</td>
+                <td data-name="Start Date">{{row.start_date}}</td>
+                <td data-name="End Date">{{row.complete_date}}</td>
+                <td data-name="Odometer">{{row.odometer}}</td>
+                <td data-name="Labor cost ($)">{{row.labor_charge}}</td>
+                <td data-name="Part cost ($)">{{row.part_cost}}</td>
+                <td data-name="Total cost ($)">{{row.total_cost}}</td>
+                <td data-name="Service Writer">{{row.username}}</td>
+                <td data-name="Service Writer First Name">{{row.first_name}}</td>
+                <td data-name="Service Writer Last Name">{{row.last_name}}</td>
+              </tr>
+
+              {% endfor %}
+
+  </div>
+
+{% endblock%}

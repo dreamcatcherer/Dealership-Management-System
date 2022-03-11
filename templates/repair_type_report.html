@@ -1,0 +1,44 @@
+{% extends 'home_base_loggedin.html' %}
+
+{% block content %}
+
+<div class="container">
+
+
+    <div class="row">
+  		<div class="col md-12">
+
+        <h1><a href="#" class="badge badge-warning center">Repairs Summary</a></h1>
+
+  			<table id="vehicle" class="table table-striped" style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+              <thead>
+                <tr>
+                  <th>Manufacturer</th>
+                  <th>Vehicle Type</th>
+                  <th>Count of Repairs</th>
+                  <th>Total Parts Costs($)</th>
+                  <th>Total Labor Costs($)</th>
+                  <th>Total Repair Costs($)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in repair_type_list %}
+
+                  <tr class='clickable-row'>
+                    <td data-name="Manufacturer">{{row.manufacturer_name}}</td>
+                    <td><a href="{{ url_for('repair_model_report', rowData=row.manufacturer_name, rowtype=row.type)}}" data-name="Vehicle Type">{{row.type}}</a></td>
+                    <td data-name="Count of Repairs">{{row.total_repair}}</td>
+                    <td data-name="Total Parts Costs($)">{{row.total_parts}}</td>
+                    <td data-name="Total Labor Costs($)">{{row.total_labor}}</td>
+                    <td data-name="Total Repair Costs($)">{{row.total}}</td>
+                  </tr>
+
+                {% endfor %}
+              </tbody>
+        </table>
+
+
+
+  </div>
+
+{% endblock%}

@@ -1,0 +1,30 @@
+{% extends 'home_base_loggedin.html' %}
+
+
+{% block content %}
+
+  <div class="container">
+    <div class="content">
+      <h2>Your account details:</h2>
+      <table class="table table-striped" >
+          <tr>
+              <td>Name:</td>
+              <td>{{ user['username'] }}</td>
+          </tr>
+          <tr>
+              <td>Password:</td>
+              <td>{{ user['password'] }}</td>
+          </tr>
+          <tr>
+              <td>First Name:</td>
+              <td>{{ user['first_name'] }}</td>
+          </tr>
+          <tr>
+              <td>Last Name:</td>
+              <td>{{ user['last_name'] }}</td>
+          </tr>
+      </table>
+    </div>
+  </div>
+
+{% endblock %}

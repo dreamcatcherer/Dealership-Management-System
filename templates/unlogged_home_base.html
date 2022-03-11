@@ -1,0 +1,156 @@
+<!Doctype HTML>
+<html>
+<head>
+	<title>Jaunty Jalopies</title>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<link rel="stylesheet" href="/static/css/unlogged_home_base.css" type="text/css"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css">
+
+	<!-- Bootstrap CSS CDN -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+	<!-- import jquery cdn -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<!-- import popper.js cdn -->
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+	<!-- import javascript cdn -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+	<!-- Font Awesome JS -->
+	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+		<!-- data table -->
+	<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
+
+
+</head>
+
+
+<body>
+	<div id="mySidenav" class="sidenav">
+		<p class="logo">Jaunty Jalopies <span class="menu">&#9776;</span></p>
+		<p class="logo1"> <span class="menu1">&#9776;</span></p>
+		<a href="{{ url_for('inventory') }}" class="icon-a"><i class="fa fa-car icons"></i> &nbsp;&nbsp;Inventory</a>
+
+		<!-- {% for user in users %}
+		<a href="#"class="icon-a"><i class="fa fa-user icons"></i> &nbsp;&nbsp;Customers</a>
+    {% endfor %} -->
+
+		<a href="{{ url_for('customer') }}"class="icon-a"><i class="fa fa-user icons"></i> &nbsp;&nbsp;Customers</a>
+	  <a href="{{ url_for('repair') }}"class="icon-a"><i class="fa fa-toolbox icons"></i> &nbsp;&nbsp;Repairs</a>
+	  <a href="#"class="icon-a"><i class="fa fa-money-check-alt icons"></i> &nbsp;&nbsp;Orders</a>
+	  <a href="#"class="icon-a"><i class="fa fa-folder-open icons"></i> &nbsp;&nbsp;Reports</a>
+	  <a href="#"class="icon-a"><i class="fa fa-circle icons"></i> &nbsp;&nbsp;Other</a>
+	</div>
+
+
+<div id="main">
+	<div>
+
+		<div class="col-div-6">
+			<img src="/static/images/logo2.png" alt="logo2.png"/>
+		</div>
+
+		<div class="col-div-6">
+			<div class="profile">
+				<a href="{{ url_for('profile') }}"><i class="fa fa-user"></i>&nbsp;Profile&nbsp;&nbsp;</a>
+				<a href="{{ url_for('logout') }}"> <i class="fa fa-power-off"></i>&nbsp;Logout&nbsp;&nbsp;</a>
+			</div>
+      <div class="clearfix"></div>
+		</div>
+	</div>
+
+
+	<div class="clearfix"></div>
+	<br/>
+	<div class="col-div-12">
+		<!-- <div class="box-8"> -->
+		<div class="content-box">
+
+
+      {% block content %}{% endblock %}
+		</div>
+	</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+
+  $(".menu").click(function(){
+    $("#mySidenav").css('width','70px');
+    $("#main").css('margin-left','70px');
+    $(".logo").css('display', 'none');
+    $(".logo1").css('display','block');
+    $(".logo span").css('visibility', 'visible');
+     $(".logo span").css('margin-left', '-10px');
+     $(".icon-a").css('visibility', 'hidden');
+     $(".icon-a").css('height', '22px');
+     $(".icons").css('visibility', 'visible');
+     $(".icons").css('margin-left', '-8px');
+      $(".menu1").css('display','block');
+      $(".menu").css('display','none');
+  });
+
+$(".menu1").click(function(){
+    $("#mySidenav").css('width','300px');
+    $("#main").css('margin-left','300px');
+    $(".logo").css('visibility', 'visible');
+    $(".logo").css('display','block');
+     $(".icon-a").css('visibility', 'visible');
+     $(".icons").css('visibility', 'visible');
+     $(".menu").css('display','block');
+      $(".menu1").css('display','none');
+ });
+
+</script>
+<script>
+$(document).ready(function(){
+  $(".profile p").click(function(){
+    $(".profile-div").toggle();
+
+  });
+  $(".noti-icon").click(function(){
+    $(".notification-div").toggle();
+  });
+
+
+
+
+});
+</script>
+
+
+<!-- jQuery CDN - Slim version (=without AJAX) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<!-- Popper.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+		$(document).ready(function () {
+				$('#sidebarCollapse').on('click', function () {
+						$('#sidebar').toggleClass('active');
+				});
+		});
+</script>
+
+
+
+
+	</body>
+</html>
