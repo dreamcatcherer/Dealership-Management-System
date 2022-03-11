@@ -1,8 +1,7 @@
-# CS 6400 Database Project Phase 3
+# Dealership Management System
 -------------------------------------
 ## Jaunty Jalopies Vehicle Management System Implementation
-- Semester: Fall 2021<br>
-- Team: 074
+
 
 
 ## Set up virtual environment:
